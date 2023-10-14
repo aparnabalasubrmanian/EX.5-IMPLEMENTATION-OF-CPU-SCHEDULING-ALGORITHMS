@@ -152,7 +152,7 @@ to execute first
 6.Calculate the total and average waiting time and turnaround time
 7.Display the values
 8.Stop the process
-
+```
 PROGRAM:
 ```
 #include<stdio.h>
@@ -240,8 +240,9 @@ and the process is put to the tail of ready queue and the schedule selects next
 process from head of the queue
 9.Calculate the total and average waiting time and turnaround time
 10.Display the results
-
+```
 PROGRAM:
+```
 #include<stdio.h>
 main()
 {
@@ -295,7 +296,7 @@ for(i=0;i<n;i++)
 printf("%d\t\t %d\t\t %d\t\t %d\n",i+1,bt[i],wt[i],tat[i]); printf("avg
 wt time=%f,avg turn around time=%f",awt,atat);
 }
-
+```
 OUTPUT:
 file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-14%2022-46-21.png![image](https://github.com/aparnabalasubrmanian/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/123351172/b4cadd7a-e7f9-4c11-94a5-ca174de52bc9)
 
