@@ -1,5 +1,7 @@
 # EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS
 
+# IMPLEMENTATION OF FIRST-COME-FIRST-SERVE SCHEDULING
+
 AIM: To implement First-Come-First-Serve (FCFS) Scheduling
 
 ALGORITHM:
@@ -61,6 +63,7 @@ file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-14%2013-33-48.
 
 RESULT: First-Come-First-Serve Scheduling is implemented successfully.
 
+# # IMPLEMENTATION OF SHORTEST JOB FIRST PREEMPTIVE SCHEDULING
 
 AIM: To implement Shortest Job First (SJF) Preemptive Scheduling
 
@@ -137,6 +140,7 @@ file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-14%2014-28-22.
 
 RESULT: Shortest Job First (SJF) preemptive scheduling is implemented successfully.
 
+# IMPLEMENTATION OF SHORTEST JOB FIRST NON-PREEMPTIVE SCHEDULING
 
 AIM: To implement Shortest Job First (SJF) Non-Preemptive Scheduling
 
@@ -221,6 +225,8 @@ file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-14%2020-47-27.
 
 RESULT: Shortest Job First (SJF) Non-preemptive scheduling is implemented successfully.
 
+# IMPLEMENTATION OF ROUND ROBIN SCHEDULING
+
 AIM: To implement Round Robin (RR) Scheduling
 
 ALGORITHM:
@@ -303,19 +309,109 @@ file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-14%2022-46-21.
 
 RESULT: Round Robin (RR) Scheduling is implemented successfully.
 
+#IMPLEMENTATION OF PRIORTIY PREEMPTIVE SCHEDULING
 
 AIM: To implement Priority Preemptive Scheduling
 
 ALGORITHM:
+```
+1.Initialize the necessary variables and data structures, including the struct Process to represent each process.
 
+2.Read the number of processes (n) from the user.
+
+3.Create an array of struct Process to store information for each process.
+
+4.Input process information for each process, including arrival time, burst time, and priority. Store this information in the struct Process array.
+
+5.Initialize the current time (time) to 0 and the completed process count (completed) to 0.
+
+6.Display the Gantt Chart header.
+
+7.Display the scheduling results, including the Gantt Chart, process ID, and execution time for each process.
+```
 PROGRAM:
+```
+#include<stdio.h>
+struct process
+{
+    int WT,AT,BT,TAT,PT;
+};
 
+struct process a[10];
 
+int main()
+{
+    int n,temp[10],t,count=0,short_p;
+    float total_WT=0,total_TAT=0,Avg_WT,Avg_TAT;
+    printf("Enter the number of the process\n");
+    scanf("%d",&n);
+    printf("Enter the arrival time , burst time and priority of the process\n");
+    printf("AT BT PT\n");
+    for(int i=0;i<n;i++)
+    {
+        scanf("%d%d%d",&a[i].AT,&a[i].BT,&a[i].PT);
+        
+        // copying the burst time in
+        // a temp array fot futher use
+        temp[i]=a[i].BT;
+    }
+    
+    // we initialize the burst time
+    // of a process with maximum 
+    a[9].PT=10000;
+    
+    for(t=0;count!=n;t++)
+    {
+        short_p=9;
+        for(int i=0;i<n;i++)
+        {
+            if(a[short_p].PT>a[i].PT && a[i].AT<=t && a[i].BT>0)
+            {
+                short_p=i;
+            }
+        }
+        
+        a[short_p].BT=a[short_p].BT-1;
+        
+        // if any process is completed
+        if(a[short_p].BT==0)
+        {
+            // one process is completed
+            // so count increases by 1
+            count++;
+            a[short_p].WT=t+1-a[short_p].AT-temp[short_p];
+            a[short_p].TAT=t+1-a[short_p].AT;
+            
+            // total calculation
+            total_WT=total_WT+a[short_p].WT;
+            total_TAT=total_TAT+a[short_p].TAT;
+            
+        }
+    }
+    
+    Avg_WT=total_WT/n;
+    Avg_TAT=total_TAT/n;
+    
+    // printing of the answer
+    printf("ID WT TAT\n");
+    for(int i=0;i<n;i++)
+    {
+        printf("%d %d\t%d\n",i+1,a[i].WT,a[i].TAT);
+    }
+    
+    printf("Avg waiting time of the process  is %f\n",Avg_WT);
+    printf("Avg turn around time of the process is %f\n",Avg_TAT);
+    
+    return 0;
+}
+```
 OUTPUT:
+file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-30%2020-24-46.png![image](https://github.com/aparnabalasubrmanian/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/123351172/0b7445bc-4d35-40c9-aef8-f91ab757a41d)
 
 
 RESULT: Priority Preemptive scheduling is implemented successfully.
 
+# IMPLEMENTATION OF PRIORITY NON-PREEMPTIVE SCHEDULING
 
 AIM: To implement Priority Non-Preemptive Scheduling
 
@@ -331,29 +427,83 @@ ALGORITHM:
 
 PROGRAM:
 ```
-#include <stdio.h>
+#include<stdio.h>
+ 
 int main()
 {
-int fd[2],child; char a[10];
-printf("\n Enter the string:");
-scanf("%s",a);
-pipe(fd);
-child=fork();
-if(!child)
-{
-close(fd[0]);
-write(fd[1],a,5); wait(0);
+    int bt[20],p[20],wt[20],tat[20],pr[20],i,j,n,total=0,pos,temp,avg_wt,avg_tat;
+    printf("Enter Total Number of Process:");
+    scanf("%d",&n);
+ 
+    printf("\nEnter Burst Time and Priority\n");
+    for(i=0;i<n;i++)
+    {
+        printf("\nP[%d]\n",i+1);
+        printf("Burst Time:");
+        scanf("%d",&bt[i]);
+        printf("Priority:");
+        scanf("%d",&pr[i]);
+        p[i]=i+1;           
+    }
+ 
+    //sorting burst time, priority and process number in ascending order using selection sort
+    for(i=0;i<n;i++)
+    {
+        pos=i;
+        for(j=i+1;j<n;j++)
+        {
+            if(pr[j]<pr[pos])
+                pos=j;
+        }
+ 
+        temp=pr[i];
+        pr[i]=pr[pos];
+        pr[pos]=temp;
+ 
+        temp=bt[i];
+        bt[i]=bt[pos];
+        bt[pos]=temp;
+ 
+        temp=p[i];
+        p[i]=p[pos];
+        p[pos]=temp;
+    }
+ 
+    wt[0]=0;	//waiting time for first process is zero
+ 
+    //calculate waiting time
+    for(i=1;i<n;i++)
+    {
+        wt[i]=0;
+        for(j=0;j<i;j++)
+            wt[i]+=bt[j];
+ 
+        total+=wt[i];
+    }
+ 
+    avg_wt=total/n;      //average waiting time
+    total=0;
+ 
+    printf("\nProcess\t    Burst Time    \tWaiting Time\tTurnaround Time");
+    for(i=0;i<n;i++)
+    {
+        tat[i]=bt[i]+wt[i];     //calculate turnaround time
+        total+=tat[i];
+        printf("\nP[%d]\t\t  %d\t\t    %d\t\t\t%d",p[i],bt[i],wt[i],tat[i]);
+    }
+ 
+    avg_tat=total/n;     //average turnaround time
+    printf("\n\nAverage Waiting Time=%d",avg_wt);
+    printf("\nAverage Turnaround Time=%d\n",avg_tat);
+ 
+	return 0;
 }
-else
-{
-close(fd[1]);read(fd[0],a,5);
-printf("The string received from pipe is: %s",a);
-}
-return 0;
-}
+
+
 ```
 
 OUTPUT:
+file:///home/sec/Pictures/Screenshots/Screenshot%20from%202023-10-30%2020-17-53.png![image](https://github.com/aparnabalasubrmanian/EX.5-IMPLEMENTATION-OF-CPU-SCHEDULING-ALGORITHMS/assets/123351172/84c59a46-0cb6-47b1-be98-e11077f4a039)
 
 
 RESULT: Priority Non-preemptive scheduling is implemented successfully.
